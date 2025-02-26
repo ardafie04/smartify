@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smartphones | Smartify Shop</title>
+
+  <!-- Tailwind -->
+  <link rel="stylesheet" href="../css/output.css" />
+
+  <!-- Flowbite -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+
+  <!-- Font Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet" />
+
+  <!-- Alpine JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- Script JS -->
+  <script src="../js/script.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="font-inter antialiased" x-data="{ 
+    page: 'home',
+    transitioning: false,
+    activeTab: 'home'
+}">
+  <!-- Bagian Header -->
+  <div x-data="{ content: '' }"
+    x-init="fetch('components/headerComponent.html').then(res => res.text()).then(html => content = html)"
+    x-html="content"></div>
+
+  <section class="mx-auto max-w-screen-2xl mb-12 sm:mb-16 md:mb-24 px-4 sm:px-6 md:px-8"
+    x-data="dataProducts('smartphones', 40)" x-effect="searchProducts(search)">
+
+    <div class="mb-6 sm:mb-8 md:mb-10">
+      <div class="relative">
+        <input type="search" name="search" id="search" placeholder="Search Smartphones"
+          class="w-full rounded-lg border border-gray-300 p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-brand-red/30 focus:border-brand-red/50"
+          x-model.debounce.500ms="search" />
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 transform text-gray-500"></i>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+      <div class="col-span-2 md:col-span-3 lg:col-span-4" x-show="isNotFound">
+        <h1 class="text-center text-xl sm:text-3xl md:text-4xl lg:text-5xl text-red-600 py-10" x-cloak>
+          No products found
+        </h1>
+      </div>
+
+      <div class="col-span-2 md:col-span-3 lg:col-span-4 flex justify-center py-10" x-show="isLoading" x-cloak>
+        <span class="loading loading-infinity loading-lg"></span>
+      </div>
+
+      <template x-for="product in products">
+        <!-- Product Card -->
+        <div
+          class="col-span-1 rounded-lg border border-gray-100 p-3 transition-all hover:cursor-pointer hover:shadow-md hover:border-gray-200">
+          <!-- Product Image -->
+          <div class="mb-3 product-card-image overflow-hidden rounded-md bg-gray-50">
+            <img :src="product.images[0]" alt="Product image"
+              class="h-full w-full aspect-[4/5] object-contain p-2 transition-transform hover:scale-105" />
+          </div>
+          <!-- Product Details -->
+          <div class="flex flex-col h-40">
+            <h5 class="font-semibold text-sm sm:text-base truncate" x-text="product.title"></h5>
+            <p class="my-2 text-xs sm:text-sm text-gray-600 line-clamp-2" x-text="product.description">
+            </p>
+            <div class="flex items-center justify-between mt-auto mb-2">
+              <p class="text-xs sm:text-sm text-gray-500">Price</p>
+              <span class="font-semibold text-green-500 text-sm sm:text-base">$<span
+                  x-text="product.price"></span></span>
+            </div>
+            <a @click="viewProduct(product.id)"
+              class="cursor-pointer text-center w-full rounded-lg border bg-brand-red px-4 py-1.5 text-xs sm:text-sm text-white hover:bg-gray-900 transition-colors">
+              View Details
+            </a>
+          </div>
+        </div>
+      </template>
+    </div>
+  </section>
+  </div>
+
+  <!-- Bagian Footer -->
+  <div x-data="{ content: '' }"
+    x-init="fetch('components/footerComponent.html').then(res => res.text()).then(html => content = html)"
+    x-html="content"></div>
+  </main>
+</body>
+
+</html>

@@ -1,0 +1,164 @@
+<!-- Navbar -->
+<header
+    class="mx-auto flex max-w-screen-2xl items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-5 sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm transition-all duration-300"
+    x-data="{ open: false, scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 20) ? true : false"
+    :class="{'shadow-md': scrolled}">
+
+    <!-- Logo with animation -->
+    <a href="./index.html" class="flex items-center gap-2 group">
+        <span
+            class="text-lg sm:text-xl font-bold text-brand-red group-hover:scale-105 transition-transform duration-300">
+            Smartify Shop
+        </span>
+        <i
+            class="fa-solid fa-mobile-screen-button text-brand-red opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
+    </a>
+
+    <!-- Desktop Navigation - hidden on mobile -->
+    <nav class="hidden lg:flex items-center space-x-8 relative" x-data="{ activeItem: 'home', currentPage: 'home', 
+      iconMap: { 
+        'home': 'fa-house', 
+        'smartphones': 'fa-mobile-screen', 
+        'tablets': 'fa-tablet-screen-button', 
+        'laptops': 'fa-laptop', 
+        'mobile-accessories': 'fa-headphones' 
+      },
+      getCurrentPage() {
+        const path = window.location.pathname;
+        return ['smartphones', 'tablets', 'laptops', 'mobile-accessories']
+            .find(p => path.includes(p)) || 'home';
+      }
+    }" x-init="currentPage = getCurrentPage(); activeItem = currentPage" @mouseleave="activeItem = currentPage">
+
+        <template x-for="item in ['home', 'smartphones', 'tablets', 'laptops', 'mobile-accessories']" :key="item">
+            <a :href="'./' + (item === 'home' ? 'index' : item) + '.html'"
+                class="text-base relative py-2 px-1 hover:text-brand-red transition-colors duration-300 flex items-center space-x-2"
+                :class="activeItem === item ? 'text-brand-red font-medium' : ''" @mouseenter="activeItem = item">
+
+                <i :class="'fa-solid ' + iconMap[item]"></i>
+
+                <span x-text="item.replace('-', ' ').charAt(0).toUpperCase() + item.replace('-', ' ').slice(1)"></span>
+
+                <span
+                    class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-red transform scale-x-0 transition-transform duration-300"
+                    :class="activeItem === item ? 'scale-x-100' : 'scale-x-0'">
+                </span>
+            </a>
+        </template>
+    </nav>
+
+    <!-- Right-side elements (search, cart, sign-in) -->
+    <div class="flex items-center gap-2 sm:gap-3 lg:gap-5">
+        <!-- Enhanced searchbar -->
+        <div class="relative hidden lg:block group">
+            <input type="text" placeholder="Search products..." name="searchbar" id="searchbar"
+                class="w-56 xl:w-72 rounded-full border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-red/30 focus:border-brand-red/50 group-hover:border-brand-red/50 transition-all duration-300" />
+            <i
+                class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 transform text-gray-500 group-hover:text-brand-red transition-colors duration-300"></i>
+        </div>
+
+        <!-- Cart icon with animation -->
+        <button class="relative p-2 hover:text-brand-red transition-colors duration-300 group">
+            <i
+                class="fa-solid fa-cart-shopping text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300"></i>
+            <span
+                class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-red text-xs text-white group-hover:scale-110 transition-transform duration-300">0</span>
+        </button>
+
+        <!-- Sign In button with improved styles -->
+        <a href="#"
+            class="hidden sm:block rounded-full border border-brand-red bg-brand-red px-5 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base text-white hover:bg-gray-900 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md">
+            Sign In
+        </a>
+
+        <!-- Mobile Menu Toggle with animation -->
+        <button @click="open = !open"
+            class="text-lg lg:hidden p-2 relative hover:text-brand-red transition-colors duration-300 focus:outline-none"
+            aria-label="Toggle mobile menu">
+            <div class="w-6 h-0.5 bg-current transform transition-all duration-300 ease-in-out"
+                :class="{'rotate-45 translate-y-1.5': open, 'translate-y-0': !open}"></div>
+            <div class="w-6 h-0.5 bg-current my-1.5 transition-all duration-200 ease-in-out"
+                :class="{'opacity-0': open}"></div>
+            <div class="w-6 h-0.5 bg-current transform transition-all duration-300 ease-in-out"
+                :class="{'-rotate-45 -translate-y-1.5': open, 'translate-y-0': !open}"></div>
+        </button>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div class="lg:hidden absolute top-full left-0 w-full z-50 transition-all duration-300 ease-in-out" x-show="open"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform -translate-y-4"
+        x-transition:enter-end="opacity-100 transform translate-y-0"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 transform translate-y-0"
+        x-transition:leave-end="opacity-0 transform -translate-y-4" @click.away="open = false" x-cloak>
+        <div class="bg-white rounded-b-lg shadow-lg divide-y divide-gray-100">
+            <!-- Mobile searchbar -->
+            <div class="relative p-4">
+                <input type="text" placeholder="Search products..."
+                    class="w-full rounded-full border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-red/30 focus:border-brand-red/50" />
+                <i
+                    class="fa-solid fa-magnifying-glass absolute right-8 top-1/2 -translate-y-1/2 transform text-gray-500"></i>
+            </div>
+
+            <!-- Mobile navigation links -->
+            <nav class="p-4 space-y-4">
+                <a href="./index.html"
+                    class="flex items-center justify-between py-2 px-3 text-base rounded-lg hover:bg-gray-50 transition-colors"
+                    :class="page === 'home' ? 'text-brand-red font-medium bg-red-50' : ''">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-house mr-3 text-brand-red"></i>
+                        Home
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+                <a href="./smartphones.html"
+                    class="flex items-center justify-between py-2 px-3 text-base rounded-lg hover:bg-gray-50 transition-colors"
+                    :class="page === 'smartphones' ? 'text-brand-red font-medium bg-red-50' : ''">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-mobile-screen mr-3 text-brand-red"></i>
+                        Smartphones
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+                <a href="./tablets.html"
+                    class="flex items-center justify-between py-2 px-3 text-base rounded-lg hover:bg-gray-50 transition-colors"
+                    :class="page === 'tablets' ? 'text-brand-red font-medium bg-red-50' : ''">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-tablet-screen-button mr-3 text-brand-red"></i>
+                        Tablets
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+                <a href="./laptops.html"
+                    class="flex items-center justify-between py-2 px-3 text-base rounded-lg hover:bg-gray-50 transition-colors"
+                    :class="page === 'laptops' ? 'text-brand-red font-medium bg-red-50' : ''">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-laptop mr-3 text-brand-red"></i>
+                        Laptops
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+                <a href="./mobile-accessories.html"
+                    class="flex items-center justify-between py-2 px-3 text-base rounded-lg hover:bg-gray-50 transition-colors"
+                    :class="page === 'mobile-accessories' ? 'text-brand-red font-medium bg-red-50' : ''"
+                    @mouseenter="activeItem = 'mobile-accessories'">
+
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-headphones mr-3 text-brand-red"></i>
+                        Mobile Accessories
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+            </nav>
+
+            <!-- Mobile sign in button -->
+            <div class="p-4">
+                <a href="#"
+                    class="block w-full rounded-lg bg-brand-red px-4 py-2.5 text-center text-white hover:bg-red-700 transition-colors shadow-sm">
+                    Sign In
+                </a>
+            </div>
+        </div>
+    </div>
+</header>

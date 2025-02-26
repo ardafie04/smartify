@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home | Smartify Shop</title>
+
+    <!-- Tailwind -->
+    <link rel="stylesheet" href="../css/output.css" />
+
+    <!-- Flowbite -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <!-- Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet" />
+
+    <!-- Alpine JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Script JS -->
+    <script src="../js/script.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="font-inter antialiased" x-data="{ 
+    page: 'home',
+    transitioning: false,
+    activeTab: 'home'
+}">
+    <!-- Bagian Header -->
+    <div x-data="{ content: '' }"
+        x-init="fetch('components/headerComponent.html').then(res => res.text()).then(html => content = html)"
+        x-html="content"></div>
+
+    <!-- Dynamic Content -->
+    <main class="flex flex-col min-h-screen">
+        <!-- Home Page -->
+        <section class="mx-auto max-w-screen-2xl mb-12 sm:mb-16 md:mb-24 px-4 sm:px-6 md:px-8">
+            <!-- Hero -->
+            <div
+                class="mx-auto mb-12 sm:mb-16 md:mb-24 max-w-screen-2xl rounded-b-3xl sm:rounded-br-[100px] md:rounded-br-[150px] bg-[#B83B8E] text-white">
+                <div
+                    class="flex flex-col lg:flex-row items-center justify-between px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 py-8 sm:py-12 md:py-16 lg:py-20">
+                    <!-- Text & Button Section -->
+                    <div class="w-full lg:w-1/2 text-center lg:text-left hero-text">
+                        <h1 class="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight">
+                            Smartify Shop: Smartphones, Accessories, and More
+                        </h1>
+                        <p class="my-4 sm:my-5 text-sm sm:text-base md:text-lg opacity-90">
+                            Discover the latest tech products, from smartphones to IoT devices, with exclusive deals and
+                            trusted brands.
+                        </p>
+                        <a href="./index.html"
+                            class="inline-block mx-auto lg:mx-0 rounded-xl border border-white/80 px-6 sm:px-8 py-2 text-white transition-all hover:bg-white hover:text-[#B83B8E] hover:shadow-lg">
+                            Buy Now
+                        </a>
+                    </div>
+
+                    <!-- Image Section -->
+                    <div class="flex w-full lg:w-1/2 items-center justify-center mt-8 lg:mt-0" x-data="dataProducts">
+                        <div
+                            class="relative flex h-[200px] sm:h-[250px] md:h-[300px] lg:h-[380px] xl:h-[440px] w-[200px] sm:w-[250px] md:w-[300px] lg:w-[380px] xl:w-[440px] items-center justify-center rounded-full bg-white/20 p-4 sm:p-6 overflow-hidden">
+                            <!-- Image from API -->
+                            <img :src="products[2]?.images?.[0]" alt="Hero product image"
+                                class="h-full w-full object-contain transition-transform hover:scale-105"
+                                x-show="products[2]?.images?.[0]" x-cloak />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smartphones Section -->
+            <div class="mx-auto mb-12 sm:mb-16 md:mb-24 max-w-screen-2xl px-4 sm:px-6 md:px-8">
+                <div class="mb-4 sm:mb-6 md:mb-8 lg:mb-10 flex items-center justify-between">
+                    <h3 class="text-lg sm:text-xl md:text-2xl font-semibold">Our Best Selling Smartphones</h3>
+                    <a href="./smartphones.html"
+                        class="text-sm sm:text-base md:text-lg flex items-center gap-1 hover:text-brand-red transition group">
+                        See More <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </a>
+
+                </div>
+
+                <!-- Product Cards Container -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8"
+                    x-data="dataProducts('smartphones')">
+                    <div class="col-span-2 md:col-span-3 lg:col-span-4">
+                        <h2 class="text-center text-xl sm:text-2xl md:text-3xl font-semibold text-red-800"
+                            x-show="error.isError">
+                            An error occurred while retrieving data
+                        </h2>
+                    </div>
+
+                    <template x-for="product in products">
+                        <!-- Product Card -->
+                        <div
+                            class="col-span-1 rounded-lg border border-gray-100 p-3 transition-all hover:cursor-pointer hover:shadow-md hover:border-gray-200">
+                            <!-- Product Image -->
+                            <div class="mb-3 product-card-image overflow-hidden rounded-md bg-gray-50">
+                                <img :src="product.images[0]" alt="Product image"
+                                    class="h-full w-full aspect-[4/5] object-contain p-2 transition-transform hover:scale-105" />
+                            </div>
+                            <!-- Product Details -->
+                            <div class="flex flex-col h-40">
+                                <h5 class="font-semibold text-sm sm:text-base truncate" x-text="product.title"></h5>
+                                <p class="my-2 text-sm sm:text-sm text-gray-600 line-clamp-2"
+                                    x-text="product.description">
+                                </p>
+                                <div class="flex items-center justify-between mt-auto mb-2">
+                                    <p class="text-xs sm:text-sm text-gray-500">Price</p>
+                                    <span class="font-semibold text-green-500 text-sm sm:text-base">$<span
+                                            x-text="product.price"></span></span>
+                                </div>
+                                <a @click="viewProduct(product.id)"
+                                    class="cursor-pointer text-center w-full rounded-lg border bg-brand-red px-4 py-1.5 text-xs sm:text-sm text-white hover:bg-gray-900 transition-colors">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Tablets Section -->
+            <div class="mx-auto mb-12 sm:mb-16 md:mb-24 max-w-screen-2xl px-4 sm:px-6 md:px-8">
+                <div class="mb-4 sm:mb-6 md:mb-8 lg:mb-10 flex items-center justify-between">
+                    <h3 class="text-lg sm:text-xl md:text-2xl font-semibold">Our Best Selling Tablets</h3>
+                    <a href="./tablets.html"
+                        class="text-sm sm:text-base md:text-lg flex items-center gap-1 hover:text-brand-red transition group">
+                        See More <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </a>
+                </div>
+
+                <!-- Product Cards Container -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8"
+                    x-data="dataProducts('tablets')">
+                    <div class="col-span-2 md:col-span-3 lg:col-span-4">
+                        <h2 class="text-center text-xl sm:text-2xl md:text-3xl font-semibold text-red-800"
+                            x-show="error.isError">
+                            An error occurred while retrieving data
+                        </h2>
+                    </div>
+
+                    <template x-for="product in products" :key="product.id">
+                        <!-- Product Card -->
+                        <div
+                            class="col-span-1 rounded-lg border border-gray-100 p-3 transition-all hover:cursor-pointer hover:shadow-md hover:border-gray-200">
+                            <!-- Product Image -->
+                            <div class="mb-3 product-card-image overflow-hidden rounded-md bg-gray-50">
+                                <img :src="product.images[0]" alt="Product image"
+                                    class="h-full w-full aspect-[4/5] object-contain p-2 transition-transform hover:scale-105" />
+                            </div>
+                            <!-- Product Details -->
+                            <div class="flex flex-col h-40">
+                                <h5 class="font-semibold text-sm sm:text-base truncate" x-text="product.title"></h5>
+                                <p class="my-2 text-sm sm:text-sm text-gray-600 line-clamp-2"
+                                    x-text="product.description">
+                                </p>
+                                <div class="flex items-center justify-between mt-auto mb-2">
+                                    <p class="text-xs sm:text-sm text-gray-500">Price</p>
+                                    <span class="font-semibold text-green-500 text-sm sm:text-base">$<span
+                                            x-text="product.price"></span></span>
+                                </div>
+                                <a @click="viewProduct(product.id)"
+                                    class="cursor-pointer text-center w-full rounded-lg border bg-brand-red px-4 py-1.5 text-xs sm:text-sm text-white hover:bg-gray-900 transition-colors">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Laptops Section -->
+            <div class="mx-auto mb-12 sm:mb-16 md:mb-24 max-w-screen-2xl px-4 sm:px-6 md:px-8">
+                <div class="mb-4 sm:mb-6 md:mb-8 lg:mb-10 flex items-center justify-between">
+                    <h3 class="text-lg sm:text-xl md:text-2xl font-semibold">Our Best Selling Laptops</h3>
+                    <a href="./laptops.html"
+                        class="text-sm sm:text-base md:text-lg flex items-center gap-1 hover:text-brand-red transition group">
+                        See More <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </a>
+                </div>
+
+                <!-- Product Cards Container -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8"
+                    x-data="dataProducts('laptops')">
+                    <div class="col-span-2 md:col-span-3 lg:col-span-4">
+                        <h2 class="text-center text-xl sm:text-2xl md:text-3xl font-semibold text-red-800"
+                            x-show="error.isError">
+                            An error occurred while retrieving data
+                        </h2>
+                    </div>
+
+                    <template x-for="product in products">
+                        <!-- Product Card -->
+                        <div
+                            class="col-span-1 rounded-lg border border-gray-100 p-3 transition-all hover:cursor-pointer hover:shadow-md hover:border-gray-200">
+                            <!-- Product Image -->
+                            <div class="mb-3 product-card-image overflow-hidden rounded-md bg-gray-50">
+                                <img :src="product.images[0]" alt="Product image"
+                                    class="h-full w-full aspect-[4/5] object-contain p-2 transition-transform hover:scale-105" />
+                            </div>
+                            <!-- Product Details -->
+                            <div class="flex flex-col h-40">
+                                <h5 class="font-semibold text-sm sm:text-base truncate" x-text="product.title"></h5>
+                                <p class="my-2 text-sm sm:text-sm text-gray-600 line-clamp-2"
+                                    x-text="product.description">
+                                </p>
+                                <div class="flex items-center justify-between mt-auto mb-2">
+                                    <p class="text-xs sm:text-sm text-gray-500">Price</p>
+                                    <span class="font-semibold text-green-500 text-sm sm:text-base">$<span
+                                            x-text="product.price"></span></span>
+                                </div>
+                                <a @click="viewProduct(product.id)"
+                                    class="cursor-pointer text-center w-full rounded-lg border bg-brand-red px-4 py-1.5 text-xs sm:text-sm text-white hover:bg-gray-900 transition-colors">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Accessories Section -->
+            <div class="mx-auto mb-12 sm:mb-16 md:mb-24 max-w-screen-2xl px-4 sm:px-6 md:px-8">
+                <div class="mb-4 sm:mb-6 md:mb-8 lg:mb-10 flex items-center justify-between">
+                    <h3 class="text-lg sm:text-xl md:text-2xl font-semibold">Our Best Selling Accessories</h3>
+                    <a href="./mobile-accessories.html"
+                        class="text-sm sm:text-base md:text-lg flex items-center gap-1 hover:text-brand-red transition group">
+                        See More <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </a>
+                </div>
+
+                <!-- Product Cards Container -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8"
+                    x-data="dataProducts('mobile-accessories')">
+                    <div class="col-span-2 md:col-span-3 lg:col-span-4">
+                        <h2 class="text-center text-xl sm:text-2xl md:text-3xl font-semibold text-red-800"
+                            x-show="error.isError">
+                            An error occurred while retrieving data
+                        </h2>
+                    </div>
+
+                    <template x-for="product in products">
+                        <!-- Product Card -->
+                        <div
+                            class="col-span-1 rounded-lg border border-gray-100 p-3 transition-all hover:cursor-pointer hover:shadow-md hover:border-gray-200">
+                            <!-- Product Image -->
+                            <div class="mb-3 product-card-image overflow-hidden rounded-md bg-gray-50">
+                                <img :src="product.images[0]" alt="Product image"
+                                    class="h-full w-full aspect-[4/5] object-contain p-2 transition-transform hover:scale-105" />
+                            </div>
+                            <!-- Product Details -->
+                            <div class="flex flex-col h-40">
+                                <h5 class="font-semibold text-sm sm:text-base truncate" x-text="product.title"></h5>
+                                <p class="my-2 text-sm sm:text-sm text-gray-600 line-clamp-2"
+                                    x-text="product.description">
+                                </p>
+                                <div class="flex items-center justify-between mt-auto mb-2">
+                                    <p class="text-xs sm:text-sm text-gray-500">Price</p>
+                                    <span class="font-semibold text-green-500 text-sm sm:text-base">$<span
+                                            x-text="product.price"></span></span>
+                                </div>
+                                <a @click="viewProduct(product.id)"
+                                    class="cursor-pointer text-center w-full rounded-lg border bg-brand-red px-4 py-1.5 text-xs sm:text-sm text-white hover:bg-gray-900 transition-colors">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Footer -->
+        <div x-data="{ content: '' }"
+            x-init="fetch('components/footerComponent.html').then(res => res.text()).then(html => content = html)"
+            x-html="content"></div>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+/* Hilangkan spinner di input number */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    /* Hilangkan spinner di Firefox */
+}
+
+/* Atur ukuran input agar tidak melebar */
+.qty-input {
+    width: 2.5rem;
+    /* Lebar tetap */
+    height: 2.5rem;
+    /* Tinggi tetap */
+    text-align: center;
+}
+
+/* Samakan ukuran tombol */
+.qty-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+}

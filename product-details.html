@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home | Smartify Shop</title>
+
+    <!-- Tailwind -->
+    <link rel="stylesheet" href="../css/output.css" />
+
+    <!-- CSS Product Detail -->
+    <link rel="stylesheet" href="../css/custom.css">
+
+    <!-- Flowbite -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <!-- Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet" />
+
+    <!-- Alpine JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Script JS -->
+    <script src="../js/script.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="font-inter antialiased" x-data="{ 
+    page: 'home',
+    transitioning: false,
+    activeTab: 'home'
+}">
+    <!-- Bagian Header -->
+    <div x-data="{ content: '' }"
+        x-init="fetch('components/headerComponent.html').then(res => res.text()).then(html => content = html)"
+        x-html="content"></div>
+
+    <!-- Breadcrumb -->
+    <div class="bg-gray-50 py-3">
+        <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 md:px-8 " x-data="productDetail()">
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="./index.html"
+                            class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-brand-red transition-colors">
+                            <i class="fa-solid fa-house mr-2 text-sm"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-chevron-right text-gray-400 mx-1 text-xs"></i>
+                            <a :href="`${product.category}.html`"
+                                class="ml-1 text-sm font-medium text-gray-700 hover:text-brand-red transition-colors"
+                                x-text="product.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')">
+                            </a>
+                        </div>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-chevron-right text-gray-400 mx-1 text-xs"></i>
+                            <span class="ml-1 text-sm font-medium text-brand-red" x-text="product.title"></span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Product Details Section -->
+    <section class="py-8 sm:py-10 md:py-12" x-data="productDetail()">
+        <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 md:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12">
+                <!-- Product Images Column -->
+                <div class="flex flex-col">
+                    <!-- Main Image -->
+                    <div class="mb-4 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+                        <img :src="currentImage" alt="Product Image"
+                            class="w-full h-auto aspect-square sm:aspect-[4/3] object-contain p-4 hover:scale-105 transition-transform duration-300" />
+                    </div>
+
+                    <!-- Thumbnail Gallery -->
+                    <div class="grid grid-cols-4 gap-2 sm:gap-4">
+                        <template x-for="(image, index) in product.images" :key="index">
+                            <div @click="currentImage = image"
+                                class="cursor-pointer overflow-hidden rounded-md border border-gray-200 bg-white p-1 sm:p-2 hover:border-brand-red transition-colors"
+                                :class="{'border-brand-red ring-1 ring-brand-red': currentImage === image}">
+                                <img :src="image" :alt="`Product thumbnail ${index + 1}`"
+                                    class="h-12 sm:h-16 md:h-20 w-full object-contain hover:scale-105 transition-transform duration-300" />
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Product Details Column -->
+                <div class="flex flex-col">
+                    <div class="mb-6">
+                        <div class="flex flex-wrap items-center mb-2 gap-2">
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded"
+                                x-text="product.availabilityStatus"></span>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">New</span>
+
+                            <!-- Rating -->
+                            <div
+                                class="flex items-center ml-0 sm:ml-auto mt-2 sm:mt-0 w-full sm:w-auto text-yellow-400">
+                                <!-- Bintang Penuh -->
+                                <template x-for="i in Math.floor(product.rating)">
+                                    <i class="fa-solid fa-star"></i>
+                                </template>
+
+                                <!-- Bintang Setengah -->
+                                <template x-if="(product.rating % 1) >= 0.5">
+                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                </template>
+
+                                <!-- Bintang Kosong -->
+                                <template x-for="i in (5 - Math.ceil(product.rating))">
+                                    <i class="fa-regular fa-star"></i>
+                                </template>
+
+                                <span class="text-sm text-gray-500 ml-1" x-text="product.rating"></span>
+                            </div>
+                        </div>
+
+                        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2" x-text="product.title"></h1>
+                        <p class="text-gray-500 mb-4">SKU: <span x-text="product.sku"></span></p>
+                        <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
+                            <span class="text-2xl sm:text-3xl font-bold text-gray-900"
+                                x-text="`$${product.price}`"></span>
+                            <span class="text-base sm:text-lg text-gray-500 line-through"
+                                x-text="`$${Math.round(product.price / (1 - product.discountPercentage/100))}`"></span>
+                            <span class="bg-red-100 text-brand-red text-sm font-semibold px-2.5 py-0.5 rounded"
+                                x-text="`${product.discountPercentage}% OFF`"></span>
+                        </div>
+                        <p x-text="product.description" class="text-gray-700 mb-4 text-sm sm:text-base"></p>
+                    </div>
+
+                    <!-- Quantity and Add to Cart -->
+                    <div class="mb-6">
+                        <div class="flex flex-wrap items-center gap-4">
+                            <!-- Quantity Selector -->
+                            <div x-data="{
+                                quantity: 1,
+                                updateQuantity(change) {
+                                    const minQty = product.minimumOrderQuantity || 1;
+                                    const maxQty = product.stock;
+                                    this.quantity = Math.max(minQty, Math.min(maxQty, this.quantity + change));
+                                }
+                            }" x-init="quantity = product.minimumOrderQuantity || 1"
+                                class="flex items-center border border-gray-300 rounded-md overflow-hidden">
+
+                                <!-- Button Minus -->
+                                <button @click.prevent="updateQuantity(-1)"
+                                    class="qty-btn flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition">
+                                    <i class="fa-solid fa-minus text-sm"></i>
+                                </button>
+
+                                <!-- Input Quantity -->
+                                <input type="number" x-model="quantity" :min="product.minimumOrderQuantity"
+                                    :max="product.stock"
+                                    class="qty-input border-0 focus:ring-0 focus:outline-none appearance-none">
+
+                                <!-- Button Plus -->
+                                <button @click.prevent="updateQuantity(1)"
+                                    class="qty-btn flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition">
+                                    <i class="fa-solid fa-plus text-sm"></i>
+                                </button>
+
+                            </div>
+
+                            <!-- Stock Indicator -->
+                            <span class="text-xs sm:text-sm text-gray-600" x-text="`Stock: ${product.stock}`"></span>
+                        </div>
+
+                        <!-- Buttons Group - Separate div for better mobile layout -->
+                        <div class="grid grid-cols-2 sm:flex gap-3 mt-4">
+                            <!-- Add to Cart Button -->
+                            <button @click="addToCart()"
+                                class="bg-brand-red hover:bg-red-700 text-white font-medium py-2 sm:py-2.5 px-4 sm:px-6 rounded-lg transition-all flex items-center justify-center gap-1 sm:gap-2 shadow-md text-sm sm:text-base">
+                                <i class="fa-solid fa-cart-plus"></i>
+                                <span>Add to Cart</span>
+                            </button>
+
+                            <!-- Buy Now Button -->
+                            <button @click="buyNow()"
+                                class="border border-brand-red text-brand-red hover:text-black font-medium py-2 sm:py-2.5 px-4 sm:px-6 rounded-lg transition-all flex items-center justify-center gap-1 sm:gap-2 shadow-md text-sm sm:text-base">
+                                <i class="fa-solid fa-bolt"></i>
+                                <span>Buy Now</span>
+                            </button>
+
+                            <!-- Wishlist Button -->
+                            <button @click="inWishlist = !inWishlist"
+                                class="col-span-2 sm:col-span-1 w-full sm:w-auto h-10 sm:h-auto sm:px-4 flex items-center justify-center border border-gray-300 rounded-lg sm:rounded-full hover:border-brand-red hover:bg-red-50 transition-all shadow-sm mt-2 sm:mt-0">
+                                <i class="fa-solid fa-heart mr-2 sm:mr-0"
+                                    :class="inWishlist ? 'text-brand-red' : 'text-gray-400'"></i>
+                                <span class="sm:hidden text-sm">Add to Wishlist</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Options -->
+                    <div class="bg-gray-50 rounded-lg p-3 sm:p-4 border border-gray-200 mb-6">
+                        <h3 class="text-xs sm:text-sm font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center">
+                            <i class="fa-solid fa-truck-fast mr-2 text-brand-red"></i>
+                            Delivery Options
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-location-dot text-gray-500 mt-1 text-xs sm:text-sm"></i>
+                                <div class="flex-1">
+                                    <p class="text-xs sm:text-sm text-gray-700">
+                                        Deliver to <span class="font-medium">New York 10001</span> -
+                                        <a href="#" class="text-brand-red hover:underline">Change</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-box text-gray-500 mt-1 text-xs sm:text-sm"></i>
+                                <div class="flex-1">
+                                    <p class="text-xs sm:text-sm text-gray-700">
+                                        Free standard shipping (<span class="font-medium"
+                                            x-text="product.shippingInformation"></span>)
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-rotate-left text-gray-500 mt-1 text-xs sm:text-sm"></i>
+                                <div class="flex-1">
+                                    <p class="text-xs sm:text-sm text-gray-700" x-text="product.warrantyInformation">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Share Buttons -->
+                    <div>
+                        <h3 class="text-xs sm:text-sm font-semibold text-gray-900 mb-2 sm:mb-3">Share This Product</h3>
+                        <div class="flex gap-2 sm:gap-3">
+                            <a href="#"
+                                class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                                <i class="fa-brands fa-facebook-f text-xs sm:text-sm"></i>
+                            </a>
+                            <a href="#"
+                                class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-blue-400 text-white hover:bg-blue-500 transition-colors">
+                                <i class="fa-brands fa-twitter text-xs sm:text-sm"></i>
+                            </a>
+                            <a href="#"
+                                class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors">
+                                <i class="fa-brands fa-pinterest text-xs sm:text-sm"></i>
+                            </a>
+                            <a href="#"
+                                class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors">
+                                <i class="fa-brands fa-whatsapp text-xs sm:text-sm"></i>
+                            </a>
+                            <a href="#"
+                                class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
+                                <i class="fa-solid fa-envelope text-xs sm:text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bagian Footer -->
+    <div x-data="{ content: '' }"
+        x-init="fetch('components/footerComponent.html').then(res => res.text()).then(html => content = html)"
+        x-html="content"></div>
+</body>
+
+</html>
